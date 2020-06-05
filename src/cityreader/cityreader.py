@@ -1,10 +1,12 @@
+import csv
+
 # Create a class to hold a city location. Call the class "City". It should have
 # fields for name, lat and lon (representing latitude and longitude).
-
 
 # We have a collection of US cities with population over 750,000 stored in the
 # file "cities.csv". (CSV stands for "comma-separated values".)
 #
+
 # In the body of the `cityreader` function, use Python's built-in "csv" module 
 # to read this file so that each record is imported into a City instance. Then
 # return the list with all the City instances from the function.
@@ -14,20 +16,44 @@
 #
 # Note that the first line of the CSV is header that describes the fields--this
 # should not be loaded into a City object.
+class City:
+  
+  def __init__(self, name, lat, lon):
+    # Name = "Burnsville, Dakota County, Minnesota" - [City, County, State]
+    self.name = name
+    self.lat = lat
+    self.lon = lon
+
 cities = []
 
 def cityreader(cities=[]):
   # TODO Implement the functionality to read from the 'cities.csv' file
   # For each city record, create a new City instance and add it to the 
   # `cities` list
+  with open('cities.csv') as csv_file:
+    reader = csv.reader(csv_file, delimiter=',')
+    line = 0
+    for row in reader:
+      if line == 0:
+        # -> First line: all titles
+        # ! Nothing needs to be done with the titles.
+        line += 1
+      else:
+        name = row[0]
+        lat = float(row[3])
+        lon = float(row[4])
+
+        cities.append(City(name, lat, lon))
+
+        line += 1
     
     return cities
 
 cityreader(cities)
 
 # Print the list of cities (name, lat, lon), 1 record per line.
-for c in cities:
-    print(c)
+# for c in cities:
+#     print(f'{c.name} | {c.lat} | {c.lon}')
 
 # STRETCH GOAL!
 #
@@ -67,5 +93,42 @@ def cityreader_stretch(lat1, lon1, lat2, lon2, cities=[]):
   # TODO Ensure that the lat and lon valuse are all floats
   # Go through each city and check to see if it falls within 
   # the specified coordinates.
+  for city in cities:
+    if lat1 < lat2 and lon1 < lon2:
+      # Case 1 Passed.
+      if city.lat >= lat1 and city.lat <= lat2:
+        if city.lon >= lon1 and city.lon <= lon2:
+          within.append(city)
+        else:
+          continue
+      else:
+        continue
+    elif lat1 > lat2 and lon1 > lon2:
+      # Case 2 Passed.
+      if city.lat <= lat1 and city.lat >= lat2:
+        if city.lon <= lon1 and city.lon >= lon2:
+          within.append(city)
+        else:
+          continue
+      else:
+        continue
+    elif lat1 > lat2 and lon1 < lon2:
+      # Case 3 Passed
+      if city.lat <= lat1 and city.lat >= lat2:
+        if city.lon >= lon1 and city.lon <= lon2:
+          within.append(city)
+        else:
+          continue
+      else:
+        continue
+    elif lat1 < lat2 and lon1 > lon2:
+      # Case 4 Passed
+      if city.lat >= lat1 and city.lat <= lat2:
+        if city.lon <= lon1 and city.lon >= lon2:
+          within.append(city)
+        else:
+          continue
+      else:
+        continue
 
   return within
