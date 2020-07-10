@@ -3,11 +3,14 @@ from comp import *
 
 def compare_humans(inp, exp):
   if len(inp) != len(exp):
+    print("\n\n1")
     return False
   for i in range(len(inp)):
     if inp[i].name != exp[i].name:
+      print("\n\n2")
       return False
     if inp[i].age != exp[i].age:
+      print("\n\n3")
       return False
   return True
 
